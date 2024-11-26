@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             if(isConnect){
                 getInfoFromServer();
             } else {
-
+                Toast.makeText(getApplicationContext(),R.string.press_connect_first,Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
             unbindService(mConn);
             isConnect = false;
             btnConnect.setText(R.string.connect);
+            btnGetInfo.setText(R.string.press_to_get_info);
         }
     }
 

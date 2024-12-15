@@ -9,4 +9,11 @@ interface IMyAidlInterface {
      * and return values in AIDL.
      */
     String getStringFromServer();
+
+    /**
+     * default in
+     */
+    void sendImage(in byte[] data);
+
+    void client2server(in ParcelFileDescriptor pfd);
 }

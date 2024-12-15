@@ -5,8 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.MemoryFile;
+import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Button;
@@ -14,10 +19,13 @@ import android.widget.Toast;
 
 import com.transcendence.aidlserver.IMyAidlInterface;
 
+import java.io.FileDescriptor;
+import java.io.InputStream;
+
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "wan";
     private IMyAidlInterface mAidl = null;
-    private Button btnConnect,btnGetInfo;
+    private Button btnConnect,btnGetInfo,btnSendImage,btnSendBigImage;
     private Boolean isConnect = false;
     private ServiceConnection mConn;
     @Override
@@ -27,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
         btnConnect = findViewById(R.id.tv_connect);
         btnGetInfo = findViewById(R.id.tv_get_info);
+        btnSendImage = findViewById(R.id.tv_send_image);
+        btnSendBigImage = findViewById(R.id.tv_big_image);
         btnConnect.setOnClickListener(v -> {
             if(isConnect){
                 disconnectService();
@@ -43,6 +53,56 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),R.string.press_connect_first,Toast.LENGTH_SHORT).show();
             }
         });
+
+        btnSendImage.setOnClickListener(v -> {
+            if(isConnect){
+                sendImage();
+            } else {
+                Toast.makeText(getApplicationContext(),R.string.press_connect_first,Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnSendBigImage.setOnClickListener(v -> {
+            if(isConnect){
+                sendBigImage();
+            } else {
+                Toast.makeText(getApplicationContext(),R.string.press_connect_first,Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void sendBigImage() {
+        Log.d(TAG,"sendBigImage");
+        Toast.makeText(getApplicationContext(),R.string.send_image,Toast.LENGTH_SHORT).show();
+        AssetManager assetManager = getAssets();
+        try {
+            InputStream is =assetManager.open("large.jpg");
+            byte[] buffer = new byte[is.available()];
+            MemoryFile memoryFile = new MemoryFile("client_image",buffer.length);
+            memoryFile.writeBytes(buffer,0,0,buffer.length);
+            FileDescriptor fd = MemoryFileUtils.INSTANCE.getFileDescriptor(memoryFile);
+            ParcelFileDescriptor pfd = ParcelFileDescriptor.dup(fd);
+            mAidl.client2server(pfd);
+            is.close();
+        } catch (Exception e){
+
+        }
+    }
+
+    private void sendImage() {
+        Log.d(TAG,"sendImage");
+        Toast.makeText(getApplicationContext(),R.string.send_image,Toast.LENGTH_SHORT).show();
+        AssetManager assetManager = getAssets();
+        try {
+            InputStream is =assetManager.open("small.jpg");
+            byte[] buffer = new byte[is.available()];
+//            is.read(buffer);
+//            Bitmap bitmap = BitmapFactory.decodeByteArray(buffer,0,buffer.length);
+            mAidl.sendImage(buffer);
+            is.close();
+        } catch (Exception e){
+
+        }
 
     }
 

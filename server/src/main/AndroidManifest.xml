@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.transcendence.aidlserver">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name=".ServerApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="AIDL Server"
@@ -10,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AidlTest">
         <service
-            android:name=".MyService"
+            android:name=".MyServiceKt"
             android:enabled="true"
             android:exported="true">
             <intent-filter >
@@ -19,7 +22,7 @@
         </service>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".MainActivityKt"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

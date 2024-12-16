@@ -1,9 +1,0 @@
-<resources>
-    <string name="app_name">Client</string>
-    <string name="connect">This is client,press to connect Server</string>
-    <string name="connecting">Connecting,press to unConnect </string>
-    <string name="press_to_get_info">Press to get info from Server</string>
-    <string name="press_connect_first">Press connect first</string>
-    <string name="send_image">Send Image</string>
-    <string name="send_big_image">Send Big Image</string>
-</resources>
